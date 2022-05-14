@@ -1,26 +1,20 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Reload.module.css';
 
 
-const Reload = ({submitSearch}) => {
-    const [location, setLocation] = useState('');
+const Reload = ({submitReload}) => {
 
-    const onSubmit = e => {
+    const onReload = e => {
         e.preventDefault();
-        if (!location || location === '') return;
-        submitSearch(location);
+        submitReload();
     };
 
     return (
-        <button type="submit" className={styles.button} onClick={onSubmit}>
+        <button type="submit" className={styles.button} onClick={onReload}>
             ОБНОВИТЬ
         </button>
     );
 };
-
-Reload.propTypes = {
-    submitSearch: PropTypes.func.isRequired,
-}
 
 export default Reload;

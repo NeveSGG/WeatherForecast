@@ -13,11 +13,15 @@ import useForecast from '../../hooks/useForecast';
 import styles from './Page.module.css';
 
 const Page = () => {
-    const { isError, isLoading, forecast, submitRequest } = useForecast();
+    const { isError, isLoading, forecast, submitRequest, reloadRequest} = useForecast();
 
-    const onSubmit = value => {
+    const onSubmit = (value) => {
         submitRequest(value);
     };
+
+    const onReload = () => {
+        reloadRequest();
+    }
 
     return (
         <Fragment>
@@ -36,13 +40,14 @@ const Page = () => {
             {/* Forecast */}
             {forecast && (
                 <div>
+                    {}
                     <div className={styles.forecastPageSearch}>
                         <Form submitSearch={onSubmit} />
                         {isError && <Error message={isError} />}
                     </div>
                     <Forecast forecast={forecast} />
                     <div className={styles.reloadButton}>
-                        {!isLoading && <Reload submitSearch={onSubmit} />}
+                        {!isLoading && <Reload submitReload={onReload} />}
                     </div>
                     
                 </div>
