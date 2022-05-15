@@ -14,9 +14,21 @@ const useForecast = () => {
     const [isError, setError] = useState(false);
     const [isLoading, setLoading] = useState(false);
     const [isReloading, setReloading] = useState(false);
-    const [city, setCity] = useState(null);
-    const [rawForecast, setRawForecast] = useState(null);
-    const [forecast, setForecast] = useState(null);
+    const [city, setCity] = useState(() => {
+        const savedValue = localStorage.getItem('city');
+        const cityName = JSON.parse(savedValue);
+        return cityName || '';
+    });
+    const [rawForecast, setRawForecast] = useState(() => {
+        const savedValue = localStorage.getItem('rawForecast');
+        const rawForecastValue = JSON.parse(savedValue);
+        return rawForecastValue || '';
+    });
+    const [forecast, setForecast] = useState(() => {
+        const savedValue = localStorage.getItem('forecast');
+        const forecastValue = JSON.parse(savedValue);
+        return forecastValue || '';
+    });
 
     useEffect(() => {
         if (isReloading){
@@ -65,6 +77,7 @@ const useForecast = () => {
     const getForecastData = async (coords) => {
         try{
             const {data} = await axios(`${GET_FORECAST_URL}${coords.lat}&lon=${coords.lon}&appid=${API_KEY}&lang=ru`);
+            localStorage.setItem('rawForecast', JSON.stringify(data));
             setRawForecast(data);
             
             console.log(data);
@@ -86,7 +99,9 @@ const useForecast = () => {
 
         const upcomingDays = getUpcomingDaysForecast(rawForecast['list']);
 
+        localStorage.setItem('forecast', JSON.stringify({currentDay, currentDayDetails, upcomingDays}));
         setForecast({currentDay, currentDayDetails, upcomingDays});
+
         setLoading(false);
         setReloading(false);
     }
@@ -95,8 +110,10 @@ const useForecast = () => {
         setLoading(true);
         setError(false);
         
-        console.log('got city name')
+        console.log('got city name');
+        localStorage.setItem('city', JSON.stringify(location));
         setCity(location);
+        
         
     }
 
